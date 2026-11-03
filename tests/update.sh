@@ -20,6 +20,7 @@ set -euo pipefail
 root=$(cd "$(dirname "$0")/.." && pwd)
 cli=$(nix build --no-link --print-out-paths "$root#cli")/bin/clojure-cli-purifier
 jq=$(nix build --no-link --print-out-paths --inputs-from "$root" 'nixpkgs#jq^bin')/bin/jq
+sha256sum=$(nix build --no-link --print-out-paths --inputs-from "$root" 'nixpkgs#coreutils')/bin/sha256sum
 mirror=central=https://maven-central.storage-download.googleapis.com/maven2/
 work=$(mktemp -d "${TMPDIR:-/tmp}/clojure-cli-purifier-update.XXXXXX")
 trap 'chmod -R u+w "$work"; rm -rf "$work"' EXIT
@@ -46,7 +47,7 @@ echo "== a lockfile whose version list of core.memoize ends at 1.0.257"
      | gsub("<release>[^<]*</release>"; "<release>1.0.257</release>"))' \
   "$lock" >"$lock.old"
 # The edited lockfile gets the contentHash a lock run would give it.
-hash=$("$jq" -S -c 'del(.contentHash)' "$lock.old" | tr -d '\n' | sha256sum | cut -d' ' -f1)
+hash=$("$jq" -S -c 'del(.contentHash)' "$lock.old" | tr -d '\n' | "$sha256sum" | cut -d' ' -f1)
 "$jq" --arg hash "$hash" '.contentHash = $hash' "$lock.old" >"$lock"
 rm "$lock.old"
 

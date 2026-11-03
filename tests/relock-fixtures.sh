@@ -21,7 +21,7 @@ echo '{}' >"$work/config/deps.edn"
 export CLJ_CONFIG="$work/config"
 
 {
-  find "$root/tests/fixtures" -name clojure-cli-purifier.lock.json -printf '%h\n'
+  find "$root/tests/fixtures" -name clojure-cli-purifier.lock.json -exec dirname {} \;
   echo "$root/pkgs/clojure-cli-purifier/deploy"
 } | sort | while IFS= read -r project; do
   echo "== $project"

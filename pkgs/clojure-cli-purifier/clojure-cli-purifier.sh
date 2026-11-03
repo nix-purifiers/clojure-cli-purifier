@@ -330,6 +330,10 @@ cmdLock() {
 
   local work
   work=$(mktemp -d "${TMPDIR:-/tmp}/clojure-cli-purifier.XXXXXX")
+  # Git names the repository of a checkout by its physical path, which the
+  # lock run matches against the gitlibs directory below. On macOS the
+  # temporary directory lies behind the /var symlink.
+  work=$(cd "$work" && pwd -P)
   # shellcheck disable=SC2064 # work is fixed from here on
   trap "chmod -R u+w '$work' 2>/dev/null; rm -rf '$work'" EXIT
   mkdir -p "$work/source" "$work/home" "$work/config" "$work/cache" "$work/gitlibs" "$work/java-tmp"
