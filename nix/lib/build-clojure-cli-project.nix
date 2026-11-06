@@ -127,7 +127,7 @@ let
     filter = if srcFilter != null then srcFilter else defaultSrcFilter;
   };
 
-  javaMajor = builtins.head (lib.splitString "." lock.javaVersion);
+  javaMajor = builtins.head (lib.splitString "." (lib.removePrefix "1." lock.javaVersion));
   defaultJdk =
     javaPackages.compiler."openjdk${javaMajor}".headless
       or (throw "clojure-cli-purifier: javaPackages has no openjdk${javaMajor} for the Java ${lock.javaVersion} the lock was made with; pass `jdk`.");
