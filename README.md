@@ -187,6 +187,12 @@ the scope shares. Its own arguments are these:
   with.
 - `srcFilter` filters the source before it goes into the store.
 
+The builder recognizes legacy Java version notation in existing locks:
+`1.8.0_504` selects major `8`, while `21.0.12.1` selects `21`. Locks keep
+their full recorded version and are not rewritten. The package set must still
+provide that JDK, or the caller must pass `jdk`. This parsing does not change
+the packaged capture JVM or establish legacy Clojure CLI/JVM compatibility.
+
 The result has these attributes:
 
 - `packages.<name>` holds the jars and the POM in `share/java`, and a

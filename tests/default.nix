@@ -121,6 +121,19 @@ let
   };
 in
 {
+  java-major =
+    pkgs.runCommand "java-major"
+      {
+        nativeBuildInputs = [
+          pkgs.nix
+          pkgs.python3
+        ];
+      }
+      ''
+        python3 -B ${./java-major.py} ${../nix/lib/build-clojure-cli-project.nix} ${pkgs.path}/lib
+        touch $out
+      '';
+
   jvm-projection = hello.packages.hello.projections.maven;
 
   composition = import ./composition.nix {
