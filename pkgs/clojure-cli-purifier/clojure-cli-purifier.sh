@@ -3,7 +3,7 @@
 # clojure-cli-purifier: locks the downloads of a deps.edn project,
 # prefetches them for the Clojure CLI, and publishes what Nix built.
 #
-# The package sets PURIFIER_LIB (the Nix library, nix/lib), PURIFIER_FORMAT
+# The package sets PURIFIER_LIB (the packaged Nix runtime), PURIFIER_FORMAT
 # (the lock format version it reads), PURIFIER_HELPER (helper.clj),
 # PURIFIER_TOOLS_JAR (the tools jar of the Clojure CLI, which runs the
 # helper), PURIFIER_NIXPKGS (the nixpkgs source the package was built from),

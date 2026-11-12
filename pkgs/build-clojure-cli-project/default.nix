@@ -93,7 +93,9 @@ let
   # The lock in memory. checkLock stops evaluation with the problems of an
   # unusable lockfile, among them a project whose definition changed after
   # locking, which would resolve downloads the lock does not hold.
-  checked = purifier.checkLock (import ./read-lock.nix { inherit src projectDir lockFile; });
+  checked = purifier.checkLock (
+    import ../../lib-overlays/default/read-lock.nix { inherit src projectDir lockFile; }
+  );
   # The lockfile itself, which holds the commands and outputs of the build.
   lock = checked.lockfile;
 

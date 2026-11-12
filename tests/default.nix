@@ -130,7 +130,7 @@ in
         ];
       }
       ''
-        python3 -B ${./java-major.py} ${../nix/lib/build-clojure-cli-project.nix} ${pkgs.path}/lib
+        python3 -B ${./java-major.py} ${../pkgs/build-clojure-cli-project/default.nix} ${pkgs.path}/lib
         touch $out
       '';
 

@@ -16,7 +16,7 @@
 let
   pkgs = import nixpkgs { };
   inherit ((builtins.getFlake purifierRef).lib) purifier;
-  build = pkgs.callPackage ./build-clojure-cli-project.nix { inherit purifier; };
+  build = pkgs.callPackage ../build-clojure-cli-project { inherit purifier; };
   built = build {
     src = builtins.path {
       path = /. + src;
