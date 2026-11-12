@@ -37,6 +37,17 @@
   purifier ? throw "clojure-cli-purifier: the command needs the shared purifier library; take it from the default package overlay of the clojure-cli-purifier flake",
 }:
 let
+  runtimeSource = lib.fileset.toSource {
+    root = ../..;
+    fileset = lib.fileset.unions [
+      ../../lib-overlays/default
+      ../build-clojure-cli-project
+      ./realize.nix
+      ./release.nix
+      ./deploy-projections.clj
+      ./maven-aliases.py
+    ];
+  };
   jdk = jdk_headless;
   clojure' = pkgs.clojure.override { inherit jdk; };
 
@@ -49,7 +60,7 @@ let
   # run.
   deployLock = ./deploy + "/clojure-cli-purifier.lock.json";
   hasDeployLock = builtins.pathExists deployLock;
-  deployRepository = callPackage ../../nix/lib/repository.nix {
+  deployRepository = callPackage ../build-clojure-cli-project/repository.nix {
     inherit purifier;
     system = stdenv.hostPlatform.system;
     fetchers = {
@@ -63,7 +74,7 @@ let
         writeText
         ;
     };
-    lock = purifier.checkLock (import ../../nix/lib/read-lock.nix { src = ./deploy; });
+    lock = purifier.checkLock (import ../../lib-overlays/default/read-lock.nix { src = ./deploy; });
   };
 
   # The shared purifier library this flake locks, as a flake reference the
@@ -108,9 +119,9 @@ writeShellApplication {
     gawk
   ];
   runtimeEnv = {
-    PURIFIER_LIB = ../../nix/lib;
+    PURIFIER_LIB = "${runtimeSource}/pkgs/clojure-cli-purifier";
     PURIFIER_PROJECT_INPUTS_TOOLS = purifier.projectInputsTool;
-    PURIFIER_FORMAT = toString (import ../../nix/lib/lock-version.nix);
+    PURIFIER_FORMAT = toString (import ../../lib-overlays/default/lock-version.nix);
     PURIFIER_HELPER = ./helper.clj;
     PURIFIER_TOOLS_JAR = "${clojure'}/libexec/clojure-tools-${clojure'.version}.jar";
     PURIFIER_NIXPKGS = "${path}";

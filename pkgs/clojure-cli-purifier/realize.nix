@@ -23,7 +23,7 @@ let
   pkgs = import nixpkgs { };
   inherit ((builtins.getFlake purifierRef).lib) purifier;
   lock = purifier.checkLock (
-    import ./read-lock.nix {
+    import ../../lib-overlays/default/read-lock.nix {
       src = /. + src;
       lockFile = /. + lockFile;
       inherit projectDir;
@@ -41,7 +41,7 @@ let
       writeText
       ;
   };
-  repository = pkgs.callPackage ./repository.nix {
+  repository = pkgs.callPackage ../build-clojure-cli-project/repository.nix {
     inherit
       purifier
       lock
@@ -49,7 +49,7 @@ let
       fetchers
       ;
   };
-  gitlibs = pkgs.callPackage ./gitlibs.nix {
+  gitlibs = pkgs.callPackage ../build-clojure-cli-project/gitlibs.nix {
     inherit
       purifier
       lock

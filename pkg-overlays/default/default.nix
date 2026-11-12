@@ -3,7 +3,7 @@
 # The default package overlay. It adds one attribute to the package set:
 # the scope `pkgs.clojure-cli-purifier`, made with lib.makeScope. The scope
 # holds the builder `buildClojureCliProject`
-# (nix/lib/build-clojure-cli-project.nix) and the command `cli`
+# (pkgs/build-clojure-cli-project/default.nix) and the command `cli`
 # (pkgs/clojure-cli-purifier). Both take the shared purifier library
 # `purifier` by name from the scope's callPackage, which is no attribute of
 # the scope, because the flake exports the attributes of the scope as
@@ -27,7 +27,7 @@
           import ../../pkgs { inherit (self) callPackage; }
           // {
             # Sandboxed builds use the native CLI, not the interactive wrapper.
-            buildClojureCliProject = self.callPackage ../../nix/lib/build-clojure-cli-project.nix {
+            buildClojureCliProject = self.callPackage ../../pkgs/build-clojure-cli-project/default.nix {
               clojure = final.clojure;
             };
           }
